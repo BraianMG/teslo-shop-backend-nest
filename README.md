@@ -4,7 +4,24 @@
 
 # Teslo API
 
-1. Levantar base de datos local
-```
-$ docker-compose up -d
-```
+## Ejecutar aplicación
+1. Clonar proyecto
+   ```
+   $ git clone ...
+   ```
+
+2. Instalar dependencias
+   ```
+   $ yarn install
+   ```
+3. Clonar archivo __.en.example__ y renombrarlo a __.env__
+4. Completar las variables de entorno
+
+5. Levantar base de datos local
+   ```
+   $ docker-compose up -d
+   ```
+6. Levantar proyecto
+   ```
+   $ yarn start:dev
+   ```
