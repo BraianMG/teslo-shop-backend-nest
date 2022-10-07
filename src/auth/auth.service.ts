@@ -56,7 +56,7 @@ export class AuthService {
     return { ...user, token: this.getJwtToken({ id: user.id }) };
   }
 
-  async checStatus(user: User) {
+  async checkStatus(user: User) {
     return { ...user, token: this.getJwtToken({ id: user.id }) };
   }
 

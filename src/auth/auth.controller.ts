@@ -35,7 +35,7 @@ export class AuthController {
   @Get('check-status')
   @Auth()
   checkStatus(@GetUser() user: User) {
-    return this.authService.checStatus(user);
+    return this.authService.checkStatus(user);
   }
 
   @Get('private')
