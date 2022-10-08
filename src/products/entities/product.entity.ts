@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductImage } from './';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 @Entity({
   name: 'products',
@@ -33,16 +33,17 @@ export class Product {
   })
   title: string;
 
-  @ApiProperty({
-    example: '0',
+  @ApiPropertyOptional({
+    example: 15,
     description: 'Product price',
+    default: 0,
   })
   @Column('float', {
     default: 0,
   })
   price: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'Ipsum quis dolore tempor dolor duis enim aliquip nulla.',
     description: 'Product description',
     default: null,
@@ -53,7 +54,7 @@ export class Product {
   })
   description: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 't_shirt_teslo',
     description: 'Product SLUG - for SEO',
     uniqueItems: true,
@@ -64,8 +65,8 @@ export class Product {
   })
   slug: string;
 
-  @ApiProperty({
-    example: '10',
+  @ApiPropertyOptional({
+    example: 10,
     description: 'Product stock',
     default: 0,
   })
@@ -90,7 +91,7 @@ export class Product {
   @Column('text')
   gender: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: ['shirt'],
     description: 'Product tags',
     default: [],
@@ -102,7 +103,7 @@ export class Product {
   })
   tags: string[];
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: ['img1.jpg', 'img2.jpg'],
     description: 'Product images',
   })
