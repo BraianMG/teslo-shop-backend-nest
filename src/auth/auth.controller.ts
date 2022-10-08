@@ -9,7 +9,7 @@ import {
   SetMetadata,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IncomingHttpHeaders } from 'http';
 import { AuthService } from './auth.service';
 import { Auth, GetRawHeaders, GetUser } from './decorators';
@@ -25,22 +25,88 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @ApiResponse({
+    status: 200,
+    description: 'Ok',
+    type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.authService.create(createUserDto);
   }
 
   @Post('login')
+  @ApiResponse({
+    status: 200,
+    description: 'Ok',
+    type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
   loginUser(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
   }
 
   @Get('check-status')
+  @ApiResponse({
+    status: 200,
+    description: 'Ok',
+    type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  @ApiBearerAuth()
   @Auth()
   checkStatus(@GetUser() user: User) {
     return this.authService.checkStatus(user);
   }
 
   @Get('private')
+  @ApiResponse({
+    status: 200,
+    description: 'Ok',
+    type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard())
   testingPrivateRoute(
     // @Req() request: Express.Request
@@ -60,6 +126,24 @@ export class AuthController {
   }
 
   @Get('private2')
+  @ApiResponse({
+    status: 200,
+    description: 'Ok',
+    type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  @ApiBearerAuth()
   // @SetMetadata('roles', ['admin', 'super-user']) // No se recomienda usar esto, es muy volatil y dificil de mantener
   @RoleProtected(ValidRoles.superUser, ValidRoles.admin)
   @UseGuards(AuthGuard(), UserRoleGuard)
@@ -68,6 +152,24 @@ export class AuthController {
   }
 
   @Get('private3')
+  @ApiResponse({
+    status: 200,
+    description: 'Ok',
+    type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  @ApiBearerAuth()
   @Auth(ValidRoles.admin)
   privateRoute3(@GetUser() user: User) {
     return { ok: true, user };

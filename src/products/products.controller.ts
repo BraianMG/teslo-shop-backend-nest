@@ -16,7 +16,7 @@ import { PaginationDto } from '../common/dtos/pagination.dto';
 import { Auth, GetUser } from '../auth/decorators';
 import { ValidRoles } from '../auth/interfaces/valid-roles';
 import { User } from '../auth/entities/user.entity';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Product } from './entities';
 
 @ApiTags('Products')
@@ -36,25 +36,74 @@ export class ProductsController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Token related.',
+    description: 'Forbidden',
   })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  @ApiBearerAuth()
   @Auth()
   create(@Body() createProductDto: CreateProductDto, @GetUser() user: User) {
     return this.productsService.create(createProductDto, user);
   }
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Ok',
+    type: Product,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
   findAll(@Query() paginationDto: PaginationDto) {
     console.log(paginationDto);
     return this.productsService.findAll(paginationDto);
   }
 
   @Get(':term')
+  @ApiResponse({
+    status: 200,
+    description: 'Ok',
+    type: Product,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
   findOne(@Param('term') term: string) {
     return this.productsService.findOnePlain(term);
   }
 
   @Patch(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Product was updated',
+    type: Product,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  @ApiBearerAuth()
   @Auth(ValidRoles.admin)
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -65,6 +114,28 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Product was deleted',
+    type: Product,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  @ApiBearerAuth()
   @Auth(ValidRoles.admin)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.remove(id);
