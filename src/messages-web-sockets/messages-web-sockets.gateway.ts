@@ -21,6 +21,8 @@ export class MessagesWebSocketsGateway
   ) {}
 
   handleConnection(client: Socket, ...args: any[]) {
+    const token = client.handshake.headers.authentication as string;
+
     this.messagesWebSocketsService.registerClient(client);
 
     //! Emite a TODOS los clientes
