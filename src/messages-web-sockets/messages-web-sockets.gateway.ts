@@ -23,6 +23,7 @@ export class MessagesWebSocketsGateway
   handleConnection(client: Socket, ...args: any[]) {
     this.messagesWebSocketsService.registerClient(client);
 
+    //! Emite a TODOS los clientes
     this.wss.emit(
       'clients-updated',
       this.messagesWebSocketsService.getConnectedClients(),
@@ -32,15 +33,31 @@ export class MessagesWebSocketsGateway
   handleDisconnect(client: Socket) {
     this.messagesWebSocketsService.removeClient(client.id);
 
+    //! Emite a TODOS los clientes
     this.wss.emit(
       'clients-updated',
       this.messagesWebSocketsService.getConnectedClients(),
     );
   }
 
-  // message-from-client
   @SubscribeMessage('message-from-client')
   handleMessageFromClient(client: Socket, payload: NewMessageDto) {
-    console.log({ clientId: client.id, payload });
+    //! Emite únicamente al cliente actual
+    // client.emit('message-from-server', {
+    //   fullName: 'Soy Yo!',
+    //   message: payload.message ||'no-message!!'
+    // })
+
+    //! Emitir a todos MENOS al cliente actual
+    // client.broadcast.emit('message-from-server', {
+    //   fullName: 'Soy Yo!',
+    //   message: payload.message ||'no-message!!'
+    // })
+
+    //! Emite a TODOS los clientes
+    this.wss.emit('message-from-server', {
+      fullName: 'Soy Yo!',
+      message: payload.message || 'no-message!!',
+    });
   }
 }
