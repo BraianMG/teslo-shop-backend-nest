@@ -29,3 +29,5 @@
    ```
    $ yarn start:dev
    ```
+
+## Production notes:
